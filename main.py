@@ -28,10 +28,12 @@ elif c == "3":
     print(result)
 
 elif c == "4":
-    maigret_run()
+    username = input("Username: ")
+    maigret_run(username)
 
 elif c == "5":
-    holehe_run()
+    email = input("Email: ")
+    holehe_run(email)
 
 elif c == "6":
     data = input("Masukkan data hasil scan untuk report: ")
