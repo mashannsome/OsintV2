@@ -8,21 +8,24 @@ init(autoreset=True)
 numverify_key = ("b82a9f21278d466c5251a0f384ce432b")
 abstract_key = ("cea4b8ce437d453c968fe48390a5976e")
 
-
 def scan(phone):
+
+    phone = phone.replace("+","").replace(" ","")
+
     print(Fore.CYAN + "\n========== PHONE OSINT ELITE ==========\n")
 
     hasil = {}
 
-    # ======================
-    # API 1 : Numverify
-    # ======================
+    # API 1 Numverify
     if numverify_key:
         try:
             url = f"https://api.apilayer.com/numverify/validate?number={phone}"
             headers = {"apikey": numverify_key}
+
             res = requests.get(url, headers=headers, timeout=10)
             data = res.json()
+
+            print("DEBUG Numverify:", data)
 
             if data.get("valid"):
                 hasil = {
@@ -35,16 +38,17 @@ def scan(phone):
                     "Tipe Line": data.get("line_type") or "Tidak tersedia",
                     "Sumber": "Numverify"
                 }
-        except:
-            pass
 
-    # ======================
-    # API 2 : AbstractAPI
-    # ======================
+        except Exception as e:
+            print("Numverify error:", e)
+
+    # API 2 Abstract
     if not hasil and abstract_key:
         try:
             url = f"https://phonevalidation.abstractapi.com/v1/?api_key={abstract_key}&phone={phone}"
             data = requests.get(url, timeout=10).json()
+
+            print("DEBUG Abstract:", data)
 
             if data.get("valid"):
                 hasil = {
@@ -57,8 +61,9 @@ def scan(phone):
                     "Tipe Line": data.get("type") or "Tidak tersedia",
                     "Sumber": "AbstractAPI"
                 }
-        except:
-            pass
+
+        except Exception as e:
+            print("Abstract error:", e)
 
     if not hasil:
         print(Fore.RED + "\nGagal mendapatkan data dari semua API\n")
@@ -69,28 +74,4 @@ def scan(phone):
     for k, v in hasil.items():
         print(Fore.YELLOW + f"{k:<15}: " + Fore.WHITE + f"{v}")
 
-    # ======================
-    # SAVE REPORT
-    # ======================
-    os.makedirs("reports", exist_ok=True)
-
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    txt_file = f"reports/phone_{phone}_{timestamp}.txt"
-    html_file = f"reports/phone_{phone}_{timestamp}.html"
-
-    with open(txt_file, "w") as f:
-        for k, v in hasil.items():
-            f.write(f"{k}: {v}\n")
-
-    with open(html_file, "w") as f:
-        f.write("<html><body><h2>PHONE OSINT REPORT</h2><table border='1'>")
-        for k, v in hasil.items():
-            f.write(f"<tr><td>{k}</td><td>{v}</td></tr>")
-        f.write("</table></body></html>")
-
-    print(Fore.CYAN + f"\nReport TXT  : {txt_file}")
-    print(Fore.CYAN + f"Report HTML : {html_file}")
-
     return hasil
-
