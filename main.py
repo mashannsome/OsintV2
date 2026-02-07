@@ -17,28 +17,30 @@ while True:
     if c == "1":
         phone = input("Phone: ")
         result = phone_scan(phone)
-        if result:
+        print(result)
             save_report(result, "Phone Intelligence")
 
     elif c == "2":
         username = input("Username: ")
         result = username_scan(username)
-        if result:
+        print(result)
             save_report(result, "Username Scan")
 
     elif c == "3":
         phone = input("Phone Telegram (+62xxx): ")
         result = telegram_lookup(phone)
-        if result:
+        print(result)
             save_report(result, "Telegram Lookup")
 
     elif c == "4":
         username = input("Username: ")
         maigret_run(username)
+        save_report(f"Maigret scan for {username}", "username-maigret")
 
     elif c == "5":
         email = input("Email: ")
         holehe_run(email)
+        save_report(f"Holehe scan for {email}", "email")
 
     elif c == "6":
         import webbrowser
