@@ -3,6 +3,7 @@ from telethon.tl.functions.contacts import ImportContactsRequest, DeleteContacts
 from telethon.tl.types import InputPhoneContact
 from colorama import Fore
 from datetime import datetime
+from core.reporter import save
 import os
 
 api_id = 30687090
@@ -125,3 +126,5 @@ def scan(phone):
     print(Fore.CYAN + f"Report HTML : {html_file}")
 
     return hasil
+    save(hasil, "Phone Intelligence")
+
