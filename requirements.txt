@@ -3,3 +3,6 @@ telethon
 colorama
 jinja2
 rich
+maigret
+holehe
+
